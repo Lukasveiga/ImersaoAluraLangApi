@@ -1,5 +1,6 @@
 package com.br.imersaojava.langsapi.service;
 
+import com.br.imersaojava.langsapi.DTO.LangDTO;
 import com.br.imersaojava.langsapi.model.Lang;
 import com.br.imersaojava.langsapi.repository.LangRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,24 @@ public class LangService {
         return repository.findByTitle(title);
     }
 
-    public Lang updateLang(Lang langRequest) {
-        Lang existingLang = repository.findById(langRequest.getId()).get();
+    public Lang updateLang(LangDTO langRequest) {
+        Lang existingLang = repository.findById(langRequest.transformToObject().getTitle()).get();
         existingLang.setTitle(langRequest.getTitle());
         existingLang.setImage(langRequest.getImage());
-        existingLang.setRanking(langRequest.getRanking());
         return repository.save(existingLang);
+    }
+
+    public String updateVoteLang(String title) {
+        Lang existingLang = repository.findByTitle(title);
+        existingLang.setCountVote(existingLang.getCountVote() + 1);
+
+        List<Lang> langs = repository.findAll();
+
+        langs.sort((a,b) -> Integer.compare(a.getCountVote(),b.getCountVote()));
+
+        existingLang.setRanking(langs.indexOf(existingLang) + 1);
+        repository.save(existingLang);
+        return title + ": Voto cadastrado.";
     }
 
     public String deleteLang(String title) {
