@@ -11,7 +11,7 @@ Utilizando a API:
     >http://localhost:8080/langs/Java
 
 <p align="center">
-  <img src="imgresults/img1.png" width="800" height="100">
+  <img src="https://github.com/Lukasveiga/ImersaoAluraLangApi/blob/main/imgresults/img1.png?raw=true" width="800" height="100">
 </p>
 
 * Cadastrar voto na linguagem desejada:
@@ -24,7 +24,7 @@ Utilizando a API:
 * Listar todas as linguagens de programação cadastradas:
     >http://localhost:8080/langs
 <p align="center">
-  <img src="imgresults/img2.png" width="800" height="400">
+  <img src="https://github.com/Lukasveiga/ImersaoAluraLangApi/blob/main/imgresults/img2.png?raw=true" width="800" height="400">
 </p>
 
   *******
