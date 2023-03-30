@@ -20,3 +20,6 @@ Utilizando a API:
   >http://localhost:8080/langs/vote/Java
 
 <p align="center"></p>
+
+  *******
+Fonte das logos: [Programming Languages Logos](https://github.com/abrahamcalf/programming-languages-logos)
