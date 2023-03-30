@@ -7,25 +7,24 @@
 Utilizando a API:
 
 * Filtrar lista pelo nome da linguagem:
-<br>
+
     >http://localhost:8080/langs/Java
-<br>
+
 <p align="center">
-  <img src="imgresults/img1.png" width="750">
+  <img src="imgresults/img1.png" width="800" height="100">
 </p>
 
 * Cadastrar voto na linguagem desejada:
-<br>
+
   >http://localhost:8080/langs/vote/Java
   >
   >
   >http://localhost:8080/langs/vote/SQL
-<br>
-* Listar todas as linguagens de programação cadastradas:<br>
+
+* Listar todas as linguagens de programação cadastradas:
     >http://localhost:8080/langs
-<br>
 <p align="center">
-  <img src="imgresults/img2.png" width="750">
+  <img src="imgresults/img2.png" width="800" height="400">
 </p>
 
   *******
