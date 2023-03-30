@@ -6,20 +6,25 @@
 
 Utilizando a API:
 
-* Listar todas as linguagens de programação cadastradas:
-    >http://localhost:8080/langs
-
-<p align="center"></p>
-
 * Filtrar lista pelo nome da linguagem:
-    >http://localhost:8080/langs/Java
+  >http://localhost:8080/langs/Java
 
-<p align="center"></p>
+<p align="center">
+  <img src="imgresults/img1.png" width="750">
+</p>
 
 * Cadastrar voto na linguagem desejada:
   >http://localhost:8080/langs/vote/Java
+  >
+  >http://localhost:8080/langs/vote/SQL
 
-<p align="center"></p>
+* Listar todas as linguagens de programação cadastradas:
+    >http://localhost:8080/langs
+
+<p align="center">
+  <img src="imgresults/img2.png" width="750">
+</p>
+
 
   *******
 Fonte das logos: [Programming Languages Logos](https://github.com/abrahamcalf/programming-languages-logos)

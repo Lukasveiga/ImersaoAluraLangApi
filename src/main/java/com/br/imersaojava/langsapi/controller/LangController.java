@@ -49,9 +49,8 @@ public class LangController {
     }
 
     @DeleteMapping("/{title}")
-    public String deleteLang(String title) {
+    public String deleteLang(@PathVariable String title) {
         return service.deleteLang(title);
     }
-
 
 }

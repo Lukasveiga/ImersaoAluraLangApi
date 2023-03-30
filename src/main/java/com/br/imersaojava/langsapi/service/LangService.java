@@ -40,12 +40,17 @@ public class LangService {
         Lang existingLang = repository.findByTitle(title);
         existingLang.setCountVote(existingLang.getCountVote() + 1);
 
+        repository.save(existingLang);
+
         List<Lang> langs = repository.findAll();
 
-        langs.sort((a,b) -> Integer.compare(a.getCountVote(),b.getCountVote()));
+        langs.sort((a,b) -> Integer.compare(b.getCountVote(), a.getCountVote()));
 
-        existingLang.setRanking(langs.indexOf(existingLang) + 1);
-        repository.save(existingLang);
+        for (Lang lang : langs){
+            lang.setRanking(langs.indexOf(lang) + 1);
+            repository.save(lang);
+        }
+
         return title + ": Voto cadastrado.";
     }
 
@@ -53,6 +58,4 @@ public class LangService {
         repository.deleteByTitle(title);
         return title + " was deleted.";
     }
-
-
 }
