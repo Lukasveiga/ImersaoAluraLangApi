@@ -26,6 +26,21 @@ Utilizando a API:
 <p align="center">
   <img src="https://github.com/Lukasveiga/ImersaoAluraLangApi/blob/main/imgresults/img2.png?raw=true" width="800" height="400">
 </p>
+<br>
+Como rodar via Docker:<br><br>
+
+* Faça o pull da imagem [Docker Image](https://hub.docker.com/r/lukasveiga/imersaoaluralangapi)
+    
+    ```
+    docker pull lukasveiga/imersaoaluralangapi
+    ```
+* Configure a porta e.g. Ports: 8080 e rode a image
+
+    ```
+    docker run lukasveiga/imersaoaluralangapi
+    ```
+* Acesse a api pelo path: http://localhost:8080/langs
+    
 
   *******
 Fonte das logos: [Programming Languages Logos](https://github.com/abrahamcalf/programming-languages-logos)
