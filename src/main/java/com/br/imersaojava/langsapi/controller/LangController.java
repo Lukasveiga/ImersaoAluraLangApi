@@ -5,6 +5,7 @@ import com.br.imersaojava.langsapi.model.Lang;
 import com.br.imersaojava.langsapi.service.LangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class LangController {
         if (langAlreadyExists != null) {
             throw new Exception("This lang already exist.");
         }
+
         return service.addLang(langDTO.transformToObject());
     }
 
@@ -33,7 +35,7 @@ public class LangController {
         return service.findAllLangs();
     }
 
-    @GetMapping("/title/{title}")
+    @GetMapping("/{title}")
     public Lang getLang(@PathVariable String title) {
         return service.findLangByTitle(title);
     }

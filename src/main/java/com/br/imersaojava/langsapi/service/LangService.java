@@ -15,12 +15,25 @@ public class LangService {
     @Autowired
     private LangRepository repository;
 
+    private static void updateRanking(List<Lang> langs, LangRepository repository) {
+
+        langs.sort((a, b) -> Integer.compare(b.getCountVote(), a.getCountVote()));
+
+        for (Lang lang : langs) {
+            lang.setRanking(langs.indexOf(lang) + 1);
+            repository.save(lang);
+        }
+    }
+
     public Lang addLang(Lang lang) {
         return repository.save(lang);
     }
 
     public List<Lang> findAllLangs() {
         List<Lang> langs = repository.findAll();
+
+        updateRanking(langs, repository);
+
         Collections.sort(langs);
         return langs;
     }
@@ -30,7 +43,14 @@ public class LangService {
     }
 
     public Lang updateLang(LangDTO langRequest) {
-        Lang existingLang = repository.findById(langRequest.transformToObject().getTitle()).get();
+        Lang existingLang;
+
+        if (repository.findById(langRequest.transformToObject().getTitle()).isPresent()){
+            existingLang = repository.findById(langRequest.transformToObject().getTitle()).get();
+        } else {
+            throw new NullPointerException("Error: wasn't possible to find the lang.");
+        }
+
         existingLang.setTitle(langRequest.getTitle());
         existingLang.setImage(langRequest.getImage());
         return repository.save(existingLang);
@@ -44,12 +64,7 @@ public class LangService {
 
         List<Lang> langs = repository.findAll();
 
-        langs.sort((a,b) -> Integer.compare(b.getCountVote(), a.getCountVote()));
-
-        for (Lang lang : langs){
-            lang.setRanking(langs.indexOf(lang) + 1);
-            repository.save(lang);
-        }
+        updateRanking(langs, repository);
 
         return title + ": Voto cadastrado.";
     }
