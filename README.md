@@ -29,17 +29,17 @@ Utilizando a API:
 <br>
 Como rodar via Docker:<br><br>
 
-* Faça o pull da imagem [Docker Image](https://hub.docker.com/r/lukasveiga/imersaoaluralangapi)
+* Faça o pull da imagem [Docker Image](https://hub.docker.com/r/lukasveiga/imersaoaluralangapi):
     
     ```
     docker pull lukasveiga/imersaoaluralangapi
     ```
-* Configure a porta e.g. Ports: 8080 e rode a image
+* Configure a porta e.g. Ports: 8080 e rode a imagem:
 
     ```
     docker run lukasveiga/imersaoaluralangapi
     ```
-* Acesse a api pelo path: http://localhost:8080/langs
+* Acesse a api pelo path: http://localhost:8080/langs (Para o exemplo da porta configurada como 8080)
     
 
   *******
