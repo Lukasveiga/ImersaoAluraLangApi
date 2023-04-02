@@ -1,10 +1,12 @@
 package com.br.imersaojava.langsapi.DTO;
 
 import com.br.imersaojava.langsapi.model.Lang;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class LangDTO {
 
