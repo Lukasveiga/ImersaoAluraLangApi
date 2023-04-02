@@ -1,10 +1,14 @@
 package com.br.imersaojava.langsapi.controller;
 
 import com.br.imersaojava.langsapi.DTO.LangDTO;
+import com.br.imersaojava.langsapi.exceptions.LangAlreadyExistsException;
+import com.br.imersaojava.langsapi.exceptions.LangNotFoundException;
 import com.br.imersaojava.langsapi.model.Lang;
 import com.br.imersaojava.langsapi.service.LangService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,15 +22,11 @@ public class LangController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Lang createLang(@RequestBody LangDTO langDTO) throws Exception {
-        Lang langAlreadyExists;
-        langAlreadyExists = service.findLangByTitle(langDTO.getTitle());
+    public ResponseEntity<Lang> createLang(@Valid @RequestBody LangDTO langDTO) throws LangAlreadyExistsException {
+        Lang lang = langDTO.transformToObject();
+        service.addLang(lang);
 
-        if (langAlreadyExists != null) {
-            throw new Exception("This lang already exist.");
-        }
-
-        return service.addLang(langDTO.transformToObject());
+        return ResponseEntity.status(HttpStatus.CREATED).body(lang);
     }
 
     @GetMapping
@@ -36,22 +36,22 @@ public class LangController {
 
     @GetMapping("/{title}")
     @ResponseStatus(HttpStatus.OK)
-    public Lang getLang(@PathVariable String title) {
+    public Lang getLang(@PathVariable String title) throws LangNotFoundException {
         return service.findLangByTitle(title);
     }
 
     @PutMapping
-    public Lang modifyLang(@RequestBody LangDTO langDTO) {
+    public Lang modifyLang(@RequestBody LangDTO langDTO) throws LangNotFoundException {
         return service.updateLang(langDTO);
     }
 
     @PatchMapping("/vote/{title}")
-    public String voteLang(@PathVariable String title) {
+    public String voteLang(@PathVariable String title) throws LangNotFoundException {
         return service.updateVoteLang(title);
     }
 
     @DeleteMapping("/{title}")
-    public String deleteLang(@PathVariable String title) {
+    public String deleteLang(@PathVariable String title) throws LangNotFoundException {
         return service.deleteLang(title);
     }
 

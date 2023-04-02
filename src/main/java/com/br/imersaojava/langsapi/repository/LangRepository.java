@@ -7,4 +7,6 @@ public interface LangRepository extends MongoRepository<Lang, String> {
     Lang findByTitle(String title);
 
     void deleteByTitle(String title);
+
+    boolean existsByTitle(String title);
 }

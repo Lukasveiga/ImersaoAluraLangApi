@@ -1,6 +1,8 @@
 package com.br.imersaojava.langsapi.service;
 
 import com.br.imersaojava.langsapi.DTO.LangDTO;
+import com.br.imersaojava.langsapi.exceptions.LangAlreadyExistsException;
+import com.br.imersaojava.langsapi.exceptions.LangNotFoundException;
 import com.br.imersaojava.langsapi.model.Lang;
 import com.br.imersaojava.langsapi.repository.LangRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,12 @@ public class LangService {
         }
     }
 
-    public Lang addLang(Lang lang) {
+    public Lang addLang(Lang lang) throws LangAlreadyExistsException {
+
+        if (repository.existsByTitle(lang.getTitle())) {
+            throw new LangAlreadyExistsException();
+        }
+
         return repository.save(lang);
     }
 
@@ -38,17 +45,23 @@ public class LangService {
         return langs;
     }
 
-    public Lang findLangByTitle(String title) {
+    public Lang findLangByTitle(String title) throws LangNotFoundException {
+
+        if (!repository.existsByTitle(title)) {
+            throw new LangNotFoundException();
+        }
+
         return repository.findByTitle(title);
     }
 
-    public Lang updateLang(LangDTO langRequest) {
+    public Lang updateLang(LangDTO langRequest) throws LangNotFoundException {
+
         Lang existingLang;
 
-        if (repository.findById(langRequest.transformToObject().getTitle()).isPresent()){
-            existingLang = repository.findById(langRequest.transformToObject().getTitle()).get();
+        if (repository.findById(langRequest.transformToObject().getId()).isPresent()){
+            existingLang = repository.findById(langRequest.transformToObject().getId()).get();
         } else {
-            throw new NullPointerException("Error: wasn't possible to find the lang.");
+            throw new LangNotFoundException();
         }
 
         existingLang.setTitle(langRequest.getTitle());
@@ -56,8 +69,14 @@ public class LangService {
         return repository.save(existingLang);
     }
 
-    public String updateVoteLang(String title) {
+    public String updateVoteLang(String title) throws LangNotFoundException {
+
+        if (!repository.existsByTitle(title)) {
+            throw new LangNotFoundException();
+        }
+
         Lang existingLang = repository.findByTitle(title);
+
         existingLang.setCountVote(existingLang.getCountVote() + 1);
 
         repository.save(existingLang);
@@ -69,7 +88,11 @@ public class LangService {
         return title + ": Voto cadastrado.";
     }
 
-    public String deleteLang(String title) {
+    public String deleteLang(String title) throws LangNotFoundException {
+
+        if (!repository.existsByTitle(title)) {
+            throw new LangNotFoundException();
+        }
         repository.deleteByTitle(title);
         return title + " was deleted.";
     }
