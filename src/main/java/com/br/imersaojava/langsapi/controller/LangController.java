@@ -30,8 +30,15 @@ public class LangController {
     }
 
     @GetMapping
-    public List<Lang> getLangs() {
-        return service.findAllLangs();
+    public ResponseEntity<List<Lang>> getLangs() {
+
+        List<Lang> langs = service.findAllLangs();
+
+        if (langs.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(langs);
     }
 
     @GetMapping("/{title}")
