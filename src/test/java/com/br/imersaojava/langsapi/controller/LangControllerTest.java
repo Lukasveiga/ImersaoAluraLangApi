@@ -153,14 +153,16 @@ public class LangControllerTest {
     @Test
     public void shouldReturnBadRquest404_WhenUpdateLang() throws Exception {
 
+        String id = "123";
+
         Lang lang = new LangDTO("Java", "image.svg").transformToObject();
-        String id = lang.getId();
+        lang.setId(id);
 
         when(service.updateLang(lang)).thenThrow(LangNotFoundException.class);
 
         String json = mapper.writeValueAsString(lang);
 
-        mockMvc.perform(put("/langs/").contentType("application/json").content(json))
+        mockMvc.perform(put("/langs/" + id).contentType("application/json").content(json))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }

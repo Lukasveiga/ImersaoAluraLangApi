@@ -48,7 +48,7 @@ public class LangController {
 
     @GetMapping("/{title}")
     public ResponseEntity<Lang> getLang(@PathVariable String title) {
-        Lang lang = null;
+        Lang lang;
         try {
             lang = service.findLangByTitle(title);
             return ResponseEntity.ok(lang);
@@ -77,7 +77,7 @@ public class LangController {
 
     @PatchMapping("/vote/{title}")
     public ResponseEntity<String> voteLang(@PathVariable String title) {
-        String result = null;
+        String result;
         try {
             result = service.updateVoteLang(title);
             return ResponseEntity.ok(result);
@@ -91,7 +91,7 @@ public class LangController {
 
     @DeleteMapping("/{title}")
     public ResponseEntity<String> deleteLang(@PathVariable String title) {
-        String result = null;
+        String result;
         try {
             result = service.deleteLang(title);
             return ResponseEntity.ok(result);

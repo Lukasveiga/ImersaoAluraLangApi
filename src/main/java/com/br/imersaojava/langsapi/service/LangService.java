@@ -14,9 +14,9 @@ import java.util.List;
 public class LangService {
 
     @Autowired
-    private static LangRepository repository;
+    private LangRepository repository;
 
-    private static void updateRanking() {
+    private static void updateRanking(LangRepository repository) {
 
         List<Lang> langs = repository.findAll();
 
@@ -34,15 +34,11 @@ public class LangService {
             throw new LangAlreadyExistsException();
         }
 
-        Lang newLang = repository.save(lang);
-
-        updateRanking();
-
-        return repository.findByTitle(newLang.getTitle());
+        return repository.save(lang);
     }
 
     public List<Lang> findAllLangs() {
-        updateRanking();
+        updateRanking(repository);
 
         List<Lang> langs = repository.findAll();
 
@@ -86,7 +82,7 @@ public class LangService {
 
         repository.save(existingLang);
 
-        updateRanking();
+        updateRanking(repository);
 
         return title + ": Voto cadastrado.";
     }
