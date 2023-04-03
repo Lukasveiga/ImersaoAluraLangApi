@@ -9,15 +9,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class LangService {
 
     @Autowired
-    private LangRepository repository;
+    private static LangRepository repository;
 
-    private static void updateRanking(List<Lang> langs, LangRepository repository) {
+    private static void updateRanking() {
+
+        List<Lang> langs = repository.findAll();
 
         langs.sort((a, b) -> Integer.compare(b.getCountVote(), a.getCountVote()));
 
@@ -33,13 +34,17 @@ public class LangService {
             throw new LangAlreadyExistsException();
         }
 
-        return repository.save(lang);
+        Lang newLang = repository.save(lang);
+
+        updateRanking();
+
+        return repository.findByTitle(newLang.getTitle());
     }
 
     public List<Lang> findAllLangs() {
-        List<Lang> langs = repository.findAll();
+        updateRanking();
 
-        updateRanking(langs, repository);
+        List<Lang> langs = repository.findAll();
 
         Collections.sort(langs);
         return langs;
@@ -56,7 +61,7 @@ public class LangService {
 
     public Lang updateLang(Lang updateLang) throws LangNotFoundException {
 
-        if(!repository.existsById(updateLang.getId())) {
+        if (!repository.existsById(updateLang.getId())) {
             throw new LangNotFoundException();
         }
 
@@ -81,9 +86,7 @@ public class LangService {
 
         repository.save(existingLang);
 
-        List<Lang> langs = repository.findAll();
-
-        updateRanking(langs, repository);
+        updateRanking();
 
         return title + ": Voto cadastrado.";
     }

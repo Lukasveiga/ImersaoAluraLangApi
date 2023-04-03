@@ -160,7 +160,7 @@ public class LangControllerTest {
 
         String json = mapper.writeValueAsString(lang);
 
-        mockMvc.perform(put("/langs/" + id).contentType("application/json").content(json))
+        mockMvc.perform(put("/langs/").contentType("application/json").content(json))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }

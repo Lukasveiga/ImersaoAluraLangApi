@@ -32,7 +32,6 @@ public class LangController {
             return ResponseEntity.status(HttpStatus.OK).body("Lang already exist.");
         }
 
-
     }
 
     @GetMapping
@@ -63,10 +62,10 @@ public class LangController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Lang> updateLang(@PathVariable String id, @RequestBody @Valid LangDTO langDTO) {
+        Lang lang = langDTO.transformToObject();
+        lang.setId(id);
 
         try {
-            Lang lang = langDTO.transformToObject();
-            lang.setId(id);
             Lang updateLang = service.updateLang(lang);
             return ResponseEntity.ok(updateLang);
         }
