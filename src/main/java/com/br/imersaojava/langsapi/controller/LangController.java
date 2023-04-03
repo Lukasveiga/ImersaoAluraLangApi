@@ -21,10 +21,14 @@ public class LangController {
     private LangService service;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Lang> createLang(@Valid @RequestBody LangDTO langDTO) throws LangAlreadyExistsException {
+    public ResponseEntity<Lang> createLang(@Valid @RequestBody LangDTO langDTO) {
         Lang lang = langDTO.transformToObject();
-        service.addLang(lang);
+        try {
+            service.addLang(lang);
+        }
+        catch (LangAlreadyExistsException e) {
+            e.printStackTrace();
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(lang);
     }
@@ -42,24 +46,60 @@ public class LangController {
     }
 
     @GetMapping("/{title}")
-    @ResponseStatus(HttpStatus.OK)
-    public Lang getLang(@PathVariable String title) throws LangNotFoundException {
-        return service.findLangByTitle(title);
+    public ResponseEntity<Lang> getLang(@PathVariable String title) {
+        Lang lang = null;
+        try {
+            lang = service.findLangByTitle(title);
+            return ResponseEntity.ok(lang);
+        }
+        catch (LangNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
-    @PutMapping
-    public Lang modifyLang(@RequestBody LangDTO langDTO) throws LangNotFoundException {
-        return service.updateLang(langDTO);
+    @PutMapping("/{id}")
+    public ResponseEntity<Lang> updateLang(@PathVariable String id, @RequestBody @Valid LangDTO langDTO) {
+
+        try {
+            Lang lang = langDTO.transformToObject();
+            lang.setId(id);
+            Lang updateLang = service.updateLang(lang);
+            return ResponseEntity.ok(updateLang);
+        }
+        catch (LangNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PatchMapping("/vote/{title}")
-    public String voteLang(@PathVariable String title) throws LangNotFoundException {
-        return service.updateVoteLang(title);
+    public ResponseEntity<String> voteLang(@PathVariable String title) {
+        String result = null;
+        try {
+            result = service.updateVoteLang(title);
+            return ResponseEntity.ok(result);
+        }
+        catch (LangNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @DeleteMapping("/{title}")
-    public String deleteLang(@PathVariable String title) throws LangNotFoundException {
-        return service.deleteLang(title);
+    public ResponseEntity<String> deleteLang(@PathVariable String title) {
+        String result = null;
+        try {
+            result = service.deleteLang(title);
+            return ResponseEntity.ok(result);
+        }
+        catch (LangNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
 }

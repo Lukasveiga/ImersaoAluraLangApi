@@ -1,6 +1,5 @@
 package com.br.imersaojava.langsapi.service;
 
-import com.br.imersaojava.langsapi.DTO.LangDTO;
 import com.br.imersaojava.langsapi.exceptions.LangAlreadyExistsException;
 import com.br.imersaojava.langsapi.exceptions.LangNotFoundException;
 import com.br.imersaojava.langsapi.model.Lang;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LangService {
@@ -47,26 +47,28 @@ public class LangService {
 
     public Lang findLangByTitle(String title) throws LangNotFoundException {
 
-        if (!repository.existsByTitle(title)) {
-            throw new LangNotFoundException();
+        if (repository.existsByTitle(title)) {
+            return repository.findByTitle(title);
         }
 
-        return repository.findByTitle(title);
+        throw new LangNotFoundException();
     }
 
-    public Lang updateLang(LangDTO langRequest) throws LangNotFoundException {
+    public Lang updateLang(Lang langRequest) throws LangNotFoundException {
 
-        Lang existingLang;
-
-        if (repository.findById(langRequest.transformToObject().getId()).isPresent()){
-            existingLang = repository.findById(langRequest.transformToObject().getId()).get();
-        } else {
+        if(!repository.existsById(langRequest.getId())) {
             throw new LangNotFoundException();
         }
 
-        existingLang.setTitle(langRequest.getTitle());
-        existingLang.setImage(langRequest.getImage());
-        return repository.save(existingLang);
+        Optional<Lang> existingLang = repository.findById(langRequest.getId());
+
+        Lang lang = existingLang.get();
+
+        langRequest.setRanking(lang.getRanking());
+        langRequest.setCountVote(lang.getCountVote());
+
+        return repository.save(langRequest);
+
     }
 
     public String updateVoteLang(String title) throws LangNotFoundException {
