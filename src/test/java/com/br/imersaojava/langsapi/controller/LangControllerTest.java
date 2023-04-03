@@ -1,6 +1,7 @@
 package com.br.imersaojava.langsapi.controller;
 
 import com.br.imersaojava.langsapi.DTO.LangDTO;
+import com.br.imersaojava.langsapi.exceptions.LangAlreadyExistsException;
 import com.br.imersaojava.langsapi.exceptions.LangNotFoundException;
 import com.br.imersaojava.langsapi.model.Lang;
 import com.br.imersaojava.langsapi.service.LangService;
@@ -43,6 +44,20 @@ public class LangControllerTest {
         mockMvc.perform(post("/langs").contentType("application/json")
                                 .content(json))
                 .andExpect(status().isCreated())
+                .andDo(print());
+    }
+
+    @Test
+    public void shouldReturnSuccess200_WhenLangAlreadyExists() throws Exception {
+        Lang lang = new LangDTO("Java", "imagem.svg").transformToObject();
+        String json = mapper.writeValueAsString(lang);
+
+        when(service.addLang(lang)).thenThrow(LangAlreadyExistsException.class);
+
+        mockMvc.perform(post("/langs").contentType("application/json")
+                                .content(json))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Lang already exist."))
                 .andDo(print());
     }
 

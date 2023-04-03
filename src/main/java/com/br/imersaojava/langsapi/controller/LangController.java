@@ -21,16 +21,18 @@ public class LangController {
     private LangService service;
 
     @PostMapping
-    public ResponseEntity<Lang> createLang(@Valid @RequestBody LangDTO langDTO) {
+    public ResponseEntity<?> createLang(@Valid @RequestBody LangDTO langDTO) {
         Lang lang = langDTO.transformToObject();
         try {
             service.addLang(lang);
+            return ResponseEntity.status(HttpStatus.CREATED).body(lang);
         }
         catch (LangAlreadyExistsException e) {
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.OK).body("Lang already exist.");
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(lang);
+
     }
 
     @GetMapping

@@ -54,20 +54,18 @@ public class LangService {
         throw new LangNotFoundException();
     }
 
-    public Lang updateLang(Lang langRequest) throws LangNotFoundException {
+    public Lang updateLang(Lang updateLang) throws LangNotFoundException {
 
-        if(!repository.existsById(langRequest.getId())) {
+        if(!repository.existsById(updateLang.getId())) {
             throw new LangNotFoundException();
         }
 
-        Optional<Lang> existingLang = repository.findById(langRequest.getId());
+        Lang existingLang = repository.findById(updateLang.getId()).get();
 
-        Lang lang = existingLang.get();
+        updateLang.setRanking(existingLang.getRanking());
+        updateLang.setCountVote(existingLang.getCountVote());
 
-        langRequest.setRanking(lang.getRanking());
-        langRequest.setCountVote(lang.getCountVote());
-
-        return repository.save(langRequest);
+        return repository.save(updateLang);
 
     }
 
