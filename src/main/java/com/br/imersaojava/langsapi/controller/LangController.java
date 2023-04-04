@@ -21,17 +21,10 @@ public class LangController {
     private LangService service;
 
     @PostMapping
-    public ResponseEntity<?> createLang(@Valid @RequestBody LangDTO langDTO) {
+    public ResponseEntity<Lang> createLang(@Valid @RequestBody LangDTO langDTO) throws LangAlreadyExistsException {
         Lang lang = langDTO.transformToObject();
-        try {
-            service.addLang(lang);
-            return ResponseEntity.status(HttpStatus.CREATED).body(lang);
-        }
-        catch (LangAlreadyExistsException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
-        }
-
+        service.addLang(lang);
+        return ResponseEntity.status(HttpStatus.CREATED).body(lang);
     }
 
     @GetMapping
@@ -47,60 +40,32 @@ public class LangController {
     }
 
     @GetMapping("/{title}")
-    public ResponseEntity<?> getLang(@PathVariable String title) {
+    public ResponseEntity<?> getLang(@PathVariable String title) throws LangNotFoundException {
         Lang lang;
-        try {
-            lang = service.findLangByTitle(title);
-            return ResponseEntity.ok(lang);
-        }
-        catch (LangNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-
+        lang = service.findLangByTitle(title);
+        return ResponseEntity.ok(lang);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateLang(@PathVariable String id, @RequestBody @Valid LangDTO langDTO) {
+    public ResponseEntity<?> updateLang(@PathVariable String id, @RequestBody @Valid LangDTO langDTO) throws LangNotFoundException {
         Lang lang = langDTO.transformToObject();
         lang.setId(id);
-
-        try {
-            Lang updateLang = service.updateLang(lang);
-            return ResponseEntity.ok(updateLang);
-        }
-        catch (LangNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        Lang updateLang = service.updateLang(lang);
+        return ResponseEntity.ok(updateLang);
     }
 
     @PatchMapping("/vote/{title}")
-    public ResponseEntity<String> voteLang(@PathVariable String title) {
+    public ResponseEntity<String> voteLang(@PathVariable String title) throws LangNotFoundException {
         String result;
-        try {
-            result = service.updateVoteLang(title);
-            return ResponseEntity.ok(result);
-        }
-        catch (LangNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.notFound().build();
-        }
-
+        result = service.updateVoteLang(title);
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{title}")
-    public ResponseEntity<?> deleteLang(@PathVariable String title) {
+    public ResponseEntity<?> deleteLang(@PathVariable String title) throws LangNotFoundException {
         String result;
-        try {
-            result = service.deleteLang(title);
-            return ResponseEntity.ok(result);
-        }
-        catch (LangNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-
+        result = service.deleteLang(title);
+        return ResponseEntity.ok(result);
     }
 
 }
