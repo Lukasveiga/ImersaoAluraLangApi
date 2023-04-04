@@ -31,7 +31,7 @@ public class LangService {
     public Lang addLang(Lang lang) throws LangAlreadyExistsException {
 
         if (repository.existsByTitle(lang.getTitle())) {
-            throw new LangAlreadyExistsException();
+            throw new LangAlreadyExistsException("Lang already exist: " + lang.getTitle());
         }
 
         return repository.save(lang);
@@ -52,16 +52,13 @@ public class LangService {
             return repository.findByTitle(title);
         }
 
-        throw new LangNotFoundException();
+        throw new LangNotFoundException("Lang not found: " + title);
     }
 
     public Lang updateLang(Lang updateLang) throws LangNotFoundException {
 
-        if (!repository.existsById(updateLang.getId())) {
-            throw new LangNotFoundException();
-        }
-
-        Lang existingLang = repository.findById(updateLang.getId()).get();
+        Lang existingLang = repository.findById(updateLang.getId())
+                .orElseThrow(() -> new LangNotFoundException("Lang not found: " + updateLang.getTitle()));
 
         updateLang.setRanking(existingLang.getRanking());
         updateLang.setCountVote(existingLang.getCountVote());
@@ -73,7 +70,7 @@ public class LangService {
     public String updateVoteLang(String title) throws LangNotFoundException {
 
         if (!repository.existsByTitle(title)) {
-            throw new LangNotFoundException();
+            throw new LangNotFoundException("Lang not found: " + title);
         }
 
         Lang existingLang = repository.findByTitle(title);
@@ -90,7 +87,7 @@ public class LangService {
     public String deleteLang(String title) throws LangNotFoundException {
 
         if (!repository.existsByTitle(title)) {
-            throw new LangNotFoundException();
+            throw new LangNotFoundException("Lang not found: " + title);
         }
         repository.deleteByTitle(title);
         return title + " was deleted.";

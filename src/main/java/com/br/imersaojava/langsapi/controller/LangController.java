@@ -29,7 +29,7 @@ public class LangController {
         }
         catch (LangAlreadyExistsException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.OK).body("Lang already exist.");
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
         }
 
     }
@@ -47,7 +47,7 @@ public class LangController {
     }
 
     @GetMapping("/{title}")
-    public ResponseEntity<Lang> getLang(@PathVariable String title) {
+    public ResponseEntity<?> getLang(@PathVariable String title) {
         Lang lang;
         try {
             lang = service.findLangByTitle(title);
@@ -55,13 +55,13 @@ public class LangController {
         }
         catch (LangNotFoundException e) {
             e.printStackTrace();
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Lang> updateLang(@PathVariable String id, @RequestBody @Valid LangDTO langDTO) {
+    public ResponseEntity<?> updateLang(@PathVariable String id, @RequestBody @Valid LangDTO langDTO) {
         Lang lang = langDTO.transformToObject();
         lang.setId(id);
 
@@ -71,7 +71,7 @@ public class LangController {
         }
         catch (LangNotFoundException e) {
             e.printStackTrace();
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -90,7 +90,7 @@ public class LangController {
     }
 
     @DeleteMapping("/{title}")
-    public ResponseEntity<String> deleteLang(@PathVariable String title) {
+    public ResponseEntity<?> deleteLang(@PathVariable String title) {
         String result;
         try {
             result = service.deleteLang(title);
@@ -98,7 +98,7 @@ public class LangController {
         }
         catch (LangNotFoundException e) {
             e.printStackTrace();
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
     }

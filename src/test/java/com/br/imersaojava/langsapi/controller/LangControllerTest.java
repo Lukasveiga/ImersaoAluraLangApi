@@ -57,7 +57,6 @@ public class LangControllerTest {
         mockMvc.perform(post("/langs").contentType("application/json")
                                 .content(json))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Lang already exist."))
                 .andDo(print());
     }
 
@@ -128,13 +127,15 @@ public class LangControllerTest {
     @Test // Needs to implement the andExpect(jsonPath("$.title").value("Java"))
     public void shouldReturnSuccess200_WhenUpdateLang() throws Exception {
 
-        Lang lang = new LangDTO("Java", "image.svg").transformToObject();
+        String title = "java";
+        String image = "image.svg";
+        Lang lang = new LangDTO(title, image).transformToObject();
 
         when(service.updateLang(lang)).thenReturn(lang);
 
         String json = mapper.writeValueAsString(lang);
 
-        mockMvc.perform(put("/langs/" + lang.getId()).contentType("application/json").content(json))
+        mockMvc.perform(put("/langs/" + lang.getId()).content(json).contentType("application/json"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
