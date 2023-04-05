@@ -42,14 +42,13 @@ public class LangController {
     }
 
     @GetMapping("/{title}")
-    public ResponseEntity<?> getLang(@PathVariable String title) throws LangNotFoundException {
-        Lang lang;
-        lang = service.findLangByTitle(title);
+    public ResponseEntity<Lang> getLang(@PathVariable String title) throws LangNotFoundException {
+        Lang lang = service.findLangByTitle(title);
         return ResponseEntity.ok(lang);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateLang(@PathVariable String id, @RequestBody @Valid LangDTO langDTO) throws LangNotFoundException {
+    public ResponseEntity<Lang> updateLang(@PathVariable String id, @RequestBody @Valid LangDTO langDTO) throws LangNotFoundException {
         Lang lang = langDTO.transformToObject();
         lang.setId(id);
         Lang updateLang = service.updateLang(lang);
@@ -58,15 +57,13 @@ public class LangController {
 
     @PatchMapping("/vote/{title}")
     public ResponseEntity<String> voteLang(@PathVariable String title) throws LangNotFoundException {
-        String result;
-        result = service.updateVoteLang(title);
+        String result = service.updateVoteLang(title);
         return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{title}")
-    public ResponseEntity<?> deleteLang(@PathVariable String title) throws LangNotFoundException {
-        String result;
-        result = service.deleteLang(title);
+    public ResponseEntity<String> deleteLang(@PathVariable String title) throws LangNotFoundException {
+        String result = service.deleteLang(title);
         return ResponseEntity.ok(result);
     }
 
