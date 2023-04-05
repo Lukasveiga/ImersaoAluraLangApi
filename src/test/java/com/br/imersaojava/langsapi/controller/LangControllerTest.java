@@ -28,10 +28,14 @@ public class LangControllerTest {
 
     @MockBean
     private LangService service;
+    private final MockMvc mockMvc;
+    private final ObjectMapper mapper;
+
     @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper mapper;
+    public LangControllerTest(MockMvc mockMvc, ObjectMapper mapper) {
+        this.mockMvc = mockMvc;
+        this.mapper = mapper;
+    }
 
     @Test
     public void shouldReturnSuccess201_WhenCreateNewLang() throws Exception {

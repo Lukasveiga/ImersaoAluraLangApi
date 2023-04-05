@@ -13,8 +13,12 @@ import java.util.List;
 @Service
 public class LangService {
 
+    private final LangRepository repository;
+
     @Autowired
-    private LangRepository repository;
+    public LangService(LangRepository repository) {
+        this.repository = repository;
+    }
 
     private static void updateRanking(LangRepository repository) {
 

@@ -17,8 +17,12 @@ import java.util.List;
 @RequestMapping("/langs")
 public class LangController {
 
+    private final LangService service;
+
     @Autowired
-    private LangService service;
+    public LangController(LangService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public ResponseEntity<Lang> createLang(@Valid @RequestBody LangDTO langDTO) throws LangAlreadyExistsException {
@@ -29,13 +33,11 @@ public class LangController {
 
     @GetMapping
     public ResponseEntity<List<Lang>> getLangs() {
-
         List<Lang> langs = service.findAllLangs();
 
         if (langs.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-
         return ResponseEntity.ok(langs);
     }
 
