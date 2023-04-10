@@ -9,12 +9,14 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/langs")
+@Validated
 public class LangController {
 
     private final LangService service;
@@ -25,7 +27,8 @@ public class LangController {
     }
 
     @PostMapping
-    public ResponseEntity<Lang> createLang(@Valid @RequestBody LangDTO langDTO) throws LangAlreadyExistsException {
+    public ResponseEntity<Lang> createLang(@Valid @RequestBody LangDTO langDTO)
+            throws LangAlreadyExistsException {
         Lang lang = langDTO.transformToObject();
         service.addLang(lang);
         return ResponseEntity.status(HttpStatus.CREATED).body(lang);
@@ -42,7 +45,7 @@ public class LangController {
     }
 
     @GetMapping("/{title}")
-    public ResponseEntity<Lang> getLang(@PathVariable String title) throws LangNotFoundException {
+    public ResponseEntity<Lang> getLang(@PathVariable String title) throws LangNotFoundException{
         Lang lang = service.findLangByTitle(title);
         return ResponseEntity.ok(lang);
     }
