@@ -41,7 +41,7 @@ public class LangControllerTest {
 
         when(service.addLang(lang)).thenReturn(lang);
 
-        mockMvc.perform(post("/langs").contentType("application/json")
+        mockMvc.perform(post("/api/v1/langs").contentType("application/json")
                                 .content(json))
                 .andExpect(status().isCreated())
                 .andDo(print());
@@ -54,7 +54,7 @@ public class LangControllerTest {
 
         when(service.addLang(lang)).thenThrow(LangAlreadyExistsException.class);
 
-        mockMvc.perform(post("/langs").contentType("application/json")
+        mockMvc.perform(post("/api/v1/langs").contentType("application/json")
                                 .content(json))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -68,7 +68,7 @@ public class LangControllerTest {
 
         when(service.addLang(lang)).thenReturn(lang);
 
-        mockMvc.perform(post("/langs").contentType("application/json")
+        mockMvc.perform(post("/api/v1/langs").contentType("application/json")
                                 .content(json))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
@@ -82,7 +82,7 @@ public class LangControllerTest {
 
         when(service.findAllLangs()).thenReturn(langs);
 
-        mockMvc.perform(get("/langs"))
+        mockMvc.perform(get("/api/v1/langs"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.[0].title").value("Java"))
@@ -96,7 +96,7 @@ public class LangControllerTest {
 
         when(service.findAllLangs()).thenReturn(new ArrayList<>());
 
-        mockMvc.perform(get("/langs"))
+        mockMvc.perform(get("/api/v1/langs"))
                 .andExpect(status().isNoContent())
                 .andDo(print());
     }
@@ -108,7 +108,7 @@ public class LangControllerTest {
 
         when(service.findLangByTitle("Java")).thenReturn(lang);
 
-        mockMvc.perform(get("/langs/{title}", "Java"))
+        mockMvc.perform(get("/api/v1/langs/{title}", "Java"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -118,7 +118,7 @@ public class LangControllerTest {
 
         when(service.findLangByTitle("Java")).thenThrow(LangNotFoundException.class);
 
-        mockMvc.perform(get("/langs/{title}", "Java"))
+        mockMvc.perform(get("/api/v1/langs/{title}", "Java"))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
@@ -129,13 +129,14 @@ public class LangControllerTest {
 
         String title = "java";
         String image = "image.svg";
-        Lang lang = new LangDTO(title, image).transformToObject();
+        Lang lang = new Lang(title, image);
+        LangDTO langDTO = new LangDTO(title, image);
 
-        when(service.updateLang(lang)).thenReturn(lang);
+        when(service.updateLang(lang.getId(), langDTO)).thenReturn(lang);
 
         String json = mapper.writeValueAsString(lang);
 
-        mockMvc.perform(put("/langs/" + lang.getId()).content(json).contentType("application/json"))
+        mockMvc.perform(put("/api/v1/langs/" + lang.getId()).content(json).contentType("application/json"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -146,7 +147,7 @@ public class LangControllerTest {
 
         String json = mapper.writeValueAsString(lang);
 
-        mockMvc.perform(put("/langs/" + lang.getId()).contentType("application/json").content(json))
+        mockMvc.perform(put("/api/v1/langs/" + lang.getId()).contentType("application/json").content(json))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
     }
@@ -156,14 +157,13 @@ public class LangControllerTest {
 
         String id = "123";
 
-        Lang lang = new LangDTO("Java", "image.svg").transformToObject();
-        lang.setId(id);
+        LangDTO lang = new LangDTO("Java", "image.svg");
 
-        when(service.updateLang(lang)).thenThrow(LangNotFoundException.class);
+        when(service.updateLang(id, lang)).thenThrow(LangNotFoundException.class);
 
         String json = mapper.writeValueAsString(lang);
 
-        mockMvc.perform(put("/langs/" + id).contentType("application/json").content(json))
+        mockMvc.perform(put("/api/v1/langs/" + id).contentType("application/json").content(json))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
@@ -175,7 +175,7 @@ public class LangControllerTest {
 
         when(service.updateVoteLang(lang.getTitle())).thenReturn(lang.getTitle() + ": Voto cadastrado.");
 
-        mockMvc.perform(patch("/langs/vote/" + lang.getTitle()))
+        mockMvc.perform(patch("/api/v1/langs/vote/" + lang.getTitle()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(lang.getTitle() + ": Voto cadastrado."))
                 .andDo(print());
@@ -188,7 +188,7 @@ public class LangControllerTest {
 
         when(service.updateVoteLang(lang.getTitle())).thenThrow(LangNotFoundException.class);
 
-        mockMvc.perform(patch("/langs/vote/" + lang.getTitle()))
+        mockMvc.perform(patch("/api/v1/langs/vote/" + lang.getTitle()))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
@@ -201,7 +201,7 @@ public class LangControllerTest {
 
         when(service.deleteLang(langTitle)).thenReturn(langTitle + " was deleted.");
 
-        mockMvc.perform(delete("/langs/" + langTitle))
+        mockMvc.perform(delete("/api/v1/langs/" + langTitle))
                 .andExpect(status().isOk())
                 .andExpect(content().string(langTitle + " was deleted."))
                 .andDo(print());
@@ -213,7 +213,7 @@ public class LangControllerTest {
 
         when(service.deleteLang(langTitle)).thenThrow(LangNotFoundException.class);
 
-        mockMvc.perform(delete("/langs/" + langTitle))
+        mockMvc.perform(delete("/api/v1/langs/" + langTitle))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }

@@ -8,7 +8,7 @@ Utilizando a API:
 
 * Filtrar lista pelo nome da linguagem:
 
-    >http://localhost:8080/langs/Java
+    >http://localhost:8080/api/v1/langs/Java
 
 <p align="center">
   <img src="https://github.com/Lukasveiga/ImersaoAluraLangApi/blob/main/imgresults/img1.png?raw=true" width="800" height="100">
@@ -16,13 +16,13 @@ Utilizando a API:
 
 * Cadastrar voto na linguagem desejada:
 
-  >http://localhost:8080/langs/vote/Java
+  >http://localhost:8080/api/v1/langs/vote/Java
   >
   >
-  >http://localhost:8080/langs/vote/SQL
+  >http://localhost:8080/api/v1langs/vote/SQL
 
 * Listar todas as linguagens de programação cadastradas:
-    >http://localhost:8080/langs
+    >http://localhost:8080/api/v1/langs
 <p align="center">
   <img src="https://github.com/Lukasveiga/ImersaoAluraLangApi/blob/main/imgresults/img2.png?raw=true" width="800" height="400">
 </p>

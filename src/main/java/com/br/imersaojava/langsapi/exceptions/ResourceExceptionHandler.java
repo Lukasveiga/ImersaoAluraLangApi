@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @ControllerAdvice
 public class ResourceExceptionHandler {
@@ -43,12 +44,25 @@ public class ResourceExceptionHandler {
 
         ApiError apiError = new ApiError(
                 request.getRequestURI(),
-                e.getMessage(),
+                Objects.requireNonNull(e.getFieldError()).getDefaultMessage(),
                 HttpStatus.BAD_REQUEST.value(),
                 LocalDateTime.now()
         );
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ListLangsEmptyException.class)
+    public ResponseEntity<ApiError> listLangsEmpty(ListLangsEmptyException e, HttpServletRequest request) {
+
+        ApiError apiError = new ApiError(
+                request.getRequestURI(),
+                e.getMessage(),
+                HttpStatus.NO_CONTENT.value(),
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.NO_CONTENT);
     }
 
     @ExceptionHandler(Exception.class)
